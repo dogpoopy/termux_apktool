@@ -4,6 +4,7 @@
 yes | pkg install openjdk-17
 yes | pkg install wget
 yes | pkg install curl
+yes | pkg install jq
 
 current_dir=$(pwd)
 
