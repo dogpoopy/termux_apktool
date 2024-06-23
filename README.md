@@ -3,4 +3,4 @@
 This will download the latest apktool.jar release and set up in proper Termux directory
 
 ### Usage:
-```git clone https://github.com/dogpoopy/termux_apktool.git apktool && cd apktool && bash setup.sh```
+```curl -s https://raw.githubusercontent.com/dogpoopy/termux_apktool/main/setup.sh | bash```

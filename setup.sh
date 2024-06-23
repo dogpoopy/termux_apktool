@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Install necessary packages
-yes | pkg install openjdk-17
-yes | pkg install wget
-yes | pkg install curl
-yes | pkg install jq
+yes | pkg install openjdk-17 wget jq
 
 current_dir=$(pwd)
 
@@ -18,31 +15,37 @@ latest_release=$(echo "$release_info" | jq -r '.assets[] | select(.name | endswi
 
 download_apktool "$latest_release"
 
+# apktool wrapper script
+wget -O "$current_dir/apktool" "https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool"
+
 if [ ! -s "$current_dir/apktool.jar" ]; then
     echo "Download from GitHub failed or file size is zero."
-    read -p 'You can download the latest apktool.jar from https://apktool.org and put it inside the cloned folder "apktool". Continue? (y/n)' answer
+    read -p 'You can download the latest apktool.jar from https://apktool.org and put it in the current directory. Continue? (y/n)' answer
     if [ "$answer" != "y" ]; then
         echo "Exiting the script."
         exit 1
     fi
 fi
 
-# Check if apktool and apktool.jar exist
+# Check if apktool.jar and apktool exist
 if [ -f "$current_dir/apktool" ] && [ -f "$current_dir/apktool.jar" ]; then
     cp "$current_dir/apktool" "$PREFIX/bin/apktool"
     echo "Setting up apktool..."
 
     cp "$current_dir/apktool.jar" "$PREFIX/bin/apktool.jar"
     echo "Setting up apktool.jar..."
+
+    rm "$current_dir/apktool" "$current_dir/apktool.jar"
 else
     echo "Either apktool or apktool.jar does not exist. Setup cannot continue."
     exit 1
 fi
 
+# Ensure apktool is executable
 if [ -f "$PREFIX/bin/apktool" ]; then
     chmod +x "$PREFIX/bin/apktool"
+    echo "Apktool setup complete."
 else
     echo "Failed to find apktool in $PREFIX/bin. Setup cannot continue."
     exit 1
 fi
-
