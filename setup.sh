@@ -5,18 +5,13 @@ yes | pkg install openjdk-17 wget jq
 
 current_dir=$(pwd)
 
-download_apktool() {
-    wget -O "$current_dir/apktool.jar" "$1"
-}
-
 # Get the latest release of apktool.jar from GitHub
 release_info=$(curl -s 'https://api.github.com/repos/iBotPeaches/Apktool/releases/latest')
 latest_release=$(echo "$release_info" | jq -r '.assets[] | select(.name | endswith(".jar")) | .browser_download_url')
 
-download_apktool "$latest_release"
-
-# apktool wrapper script
+# download apktool.jar and apktool wrapper script
 wget -O "$current_dir/apktool" "https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool"
+wget -O "$current_dir/apktool.jar" "$latest_release"
 
 if [ ! -s "$current_dir/apktool.jar" ]; then
     echo "Download from GitHub failed or file size is zero."
